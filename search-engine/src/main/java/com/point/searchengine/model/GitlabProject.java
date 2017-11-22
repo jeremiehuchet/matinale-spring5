@@ -1,9 +1,11 @@
 package com.point.searchengine.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 import java.net.URL;
 
+@Data
 public class GitlabProject {
 
     private Long id;

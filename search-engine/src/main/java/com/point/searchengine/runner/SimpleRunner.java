@@ -1,7 +1,9 @@
 package com.point.searchengine.runner;
 
 import com.point.searchengine.model.GithubProject;
+import com.point.searchengine.model.GitlabProject;
 import com.point.searchengine.repository.GithubRepository;
+import com.point.searchengine.repository.GitlabRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.profiler.Profiler;
@@ -15,25 +17,25 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class SimpleRunner implements CommandLineRunner {
 
-    public final GithubRepository github;
-    public final GithubRepository gitlab;
+    private final GithubRepository github;
+    private final GitlabRepository gitlab;
 
     @Override
     public void run(String... args) throws Exception {
         Profiler p = new Profiler("search");
         p.setLogger(log);
 
-        p.start("github");
-
-        System.out.println("\nGithub results:");
-        github.search("springframework").stream()
-                .map(GithubProject::getFullName)
-                .forEach(name -> System.out.println(name));
-
         p.start("gitlab");
 
         System.out.println("\nGitlab results:");
         gitlab.search("springframework").stream()
+                .map(GitlabProject::getFullName)
+                .forEach(name -> System.out.println(name));
+
+        p.start("github");
+
+        System.out.println("\nGithub results:");
+        github.search("springframework").stream()
                 .map(GithubProject::getFullName)
                 .forEach(name -> System.out.println(name));
 
