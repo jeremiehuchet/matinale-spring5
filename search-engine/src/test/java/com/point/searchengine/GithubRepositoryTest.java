@@ -31,9 +31,7 @@ public class GithubRepositoryTest {
     @Test
     public void can_search_repositories_with_reactor() throws InterruptedException {
 
-        WebClient.ResponseSpec spring = github.provideGitlabSpec("spring");
-
-        List<GithubProject> results = spring.bodyToMono(GithubSearchResponse.class)
+        List<GithubProject> results = github.find("spring")
             .map(GithubSearchResponse::getItems)
             .flatMapMany(Flux::fromIterable)
             .take(10)

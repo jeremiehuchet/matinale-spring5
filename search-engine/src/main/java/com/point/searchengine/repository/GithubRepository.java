@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.util.List;
@@ -23,13 +24,13 @@ public class GithubRepository {
         return http.getForObject("https://api.github.com/search/repositories?q={keywords}", GithubSearchResponse.class, keywords).getItems();
     }
 
-    public WebClient.ResponseSpec provideGitlabSpec(String keywords) {
+    public Mono<GithubSearchResponse> find(String keywords) {
 
         URI build = UriComponentsBuilder.fromHttpUrl("https://api.github.com/search/repositories")
             .queryParam("q", keywords)
             .build().toUri();
 
-        return webClient.get().uri(build).retrieve();
+        return webClient.get().uri(build).retrieve().bodyToMono(GithubSearchResponse.class);
 
     }
 }

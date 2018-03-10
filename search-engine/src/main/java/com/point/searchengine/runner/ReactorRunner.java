@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.util.function.Tuples;
 
@@ -26,20 +25,14 @@ public class ReactorRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        // Web spec
-        WebClient.ResponseSpec gitlabSpec = gitlab.provideGitlabSpec("spring");
-        WebClient.ResponseSpec githubSpec = github.provideGitlabSpec("spring");
-
-
         // Flux github
         Flux<GithubProject> githubProjectFlux =
-            githubSpec
-                .bodyToMono(GithubSearchResponse.class)
+            github.find("spring")
                 .map(GithubSearchResponse::getItems)
                 .flatMapMany(Flux::fromIterable).take(10);
 
         // Flux gitlab
-        Flux<GitlabProject> gitlabProjectFlux = gitlabSpec.bodyToFlux(GitlabProject.class).take(10);
+        Flux<GitlabProject> gitlabProjectFlux = gitlab.find("spring").take(10);
 
         // Merge flux and sort
         Flux.merge(gitlabProjectFlux, githubProjectFlux)

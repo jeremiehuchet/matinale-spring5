@@ -29,9 +29,7 @@ public class GitlabRepositoryTest {
     @Test
     public void can_search_repositories_with_reactor() throws InterruptedException {
 
-        WebClient.ResponseSpec spring = gitlab.provideGitlabSpec("spring");
-
-        List<GitlabProject> results = spring.bodyToFlux(GitlabProject.class).take(10).collectList().block();
+        List<GitlabProject> results = gitlab.find("spring").take(10).collectList().block();
 
         assertThat(results.size()).isGreaterThanOrEqualTo(1);
 
