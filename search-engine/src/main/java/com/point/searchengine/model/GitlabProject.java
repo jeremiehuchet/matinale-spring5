@@ -6,7 +6,7 @@ import lombok.Data;
 import java.net.URL;
 
 @Data
-public class GitlabProject {
+public class GitlabProject implements HasProjectName {
 
     private Long id;
 
