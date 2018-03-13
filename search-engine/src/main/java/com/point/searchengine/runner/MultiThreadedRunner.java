@@ -56,12 +56,13 @@ public class MultiThreadedRunner implements CommandLineRunner {
 
         List<String> resultsC = completionService.take().get();
         resultsC.forEach(name -> System.out.println("3: " + name));
+
+        executor.shutdown();
+
         pGitlab.stop().print();
         pGithub.stop().print();
         pGitfake.stop().print();
         pMain.stop().print();
-
-        executor.shutdown();
     }
 
     private Callable<List<String>> profile(Profiler p, Callable<List<String>> supplier) {
