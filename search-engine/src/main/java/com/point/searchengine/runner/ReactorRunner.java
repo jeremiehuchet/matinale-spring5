@@ -1,8 +1,10 @@
 package com.point.searchengine.runner;
 
+import com.point.searchengine.model.GitfakeProject;
 import com.point.searchengine.model.GithubProject;
 import com.point.searchengine.model.GithubSearchResponse;
 import com.point.searchengine.model.GitlabProject;
+import com.point.searchengine.repository.GitfakeRepository;
 import com.point.searchengine.repository.GithubRepository;
 import com.point.searchengine.repository.GitlabRepository;
 import lombok.AllArgsConstructor;
@@ -18,9 +20,10 @@ import reactor.util.function.Tuples;
 @Profile("reactor")
 @AllArgsConstructor
 public class ReactorRunner implements CommandLineRunner {
-    private GithubRepository github;
 
+    private GithubRepository github;
     private GitlabRepository gitlab;
+    private GitfakeRepository gitfake;
 
     @Override
     public void run(String... args) throws Exception {
@@ -34,8 +37,10 @@ public class ReactorRunner implements CommandLineRunner {
         // Flux gitlab
         Flux<GitlabProject> gitlabProjectFlux = gitlab.find("spring").take(10);
 
+        // Flux gitfake
+        Flux<GitfakeProject> gitfakeProjectFlux = gitfake.find("spring").take(50);
         // Merge flux and sort
-        Flux.merge(gitlabProjectFlux, githubProjectFlux)
+        Flux.merge(gitlabProjectFlux, githubProjectFlux, gitfakeProjectFlux)
             .sort((o1, o2) -> String.CASE_INSENSITIVE_ORDER.compare(o1.getName(), o2.getName()))
             .map(o -> Tuples.of(o.getClass().getCanonicalName(), o.getName()))
             .subscribe(System.out::println);
