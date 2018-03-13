@@ -42,6 +42,8 @@ public class SimpleRunner implements CommandLineRunner {
                 .map(GithubProject::getFullName)
                 .forEach(name -> System.out.println(name));
 
+        p.start("gitfake");
+
         System.out.println("\nGitfake results:");
         gitfake.search("springframework").stream()
                 .map(GitfakeProject::getName)
