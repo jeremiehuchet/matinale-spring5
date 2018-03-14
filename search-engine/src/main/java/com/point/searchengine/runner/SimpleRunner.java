@@ -1,7 +1,9 @@
 package com.point.searchengine.runner;
 
+import com.point.searchengine.model.GitfakeProject;
 import com.point.searchengine.model.GithubProject;
 import com.point.searchengine.model.GitlabProject;
+import com.point.searchengine.repository.GitfakeRepository;
 import com.point.searchengine.repository.GithubRepository;
 import com.point.searchengine.repository.GitlabRepository;
 import lombok.AllArgsConstructor;
@@ -19,6 +21,7 @@ public class SimpleRunner implements CommandLineRunner {
 
     private final GithubRepository github;
     private final GitlabRepository gitlab;
+    private final GitfakeRepository gitfake;
 
     @Override
     public void run(String... args) throws Exception {
@@ -37,6 +40,13 @@ public class SimpleRunner implements CommandLineRunner {
         System.out.println("\nGithub results:");
         github.search("springframework").stream()
                 .map(GithubProject::getFullName)
+                .forEach(name -> System.out.println(name));
+
+        p.start("gitfake");
+
+        System.out.println("\nGitfake results:");
+        gitfake.search("springframework").stream()
+                .map(GitfakeProject::getName)
                 .forEach(name -> System.out.println(name));
 
         p.stop()

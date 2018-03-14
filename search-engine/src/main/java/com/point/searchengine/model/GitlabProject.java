@@ -17,7 +17,6 @@ public class GitlabProject implements HasProjectName {
 
     private String description;
 
-
     @JsonProperty("http_url_to_repo")
     private URL url;
 

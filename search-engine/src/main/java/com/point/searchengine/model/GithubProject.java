@@ -11,8 +11,8 @@ public class GithubProject implements HasProjectName {
     private String id;
 
     private String name;
-    @JsonProperty("full_name")
 
+    @JsonProperty("full_name")
     private String fullName;
 
     private String description;
